@@ -94,3 +94,4 @@ def parse_data(data):
             i += 1  # Move to the next line if the format doesn't match
     ic(items)  # Log the parsed items
     return items  # Return the list of items
+

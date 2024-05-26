@@ -66,3 +66,4 @@ class ScrollableText:
             max_visible_lines = (self.rect.height - 20) // (self.text_font.get_height() + 5)
             self.scroll_offset = max(0, min(self.scroll_offset, len(self.texts) - max_visible_lines))
             # ic(f"Final scroll_offset: {self.scroll_offset}")  # Debugging
+

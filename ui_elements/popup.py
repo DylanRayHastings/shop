@@ -100,3 +100,4 @@ class Popup:
         """
         self.game_state.popup = None
         # ic(self.game_state.popup)  # Debugging
+

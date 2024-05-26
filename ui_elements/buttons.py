@@ -24,3 +24,4 @@ class Button:
         if handle_mouse_click(self.rect, event):
             self.action()
             # ic(event)  # Debugging
+

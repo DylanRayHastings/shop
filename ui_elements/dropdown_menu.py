@@ -76,3 +76,4 @@ class DropdownMenu:
                 option_text_surf = render_text(self.font, option, BLACK)
                 center_text_in_rect(screen, option_text_surf, option_rect)
         # ic(screen)  # Debugging
+

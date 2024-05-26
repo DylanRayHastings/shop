@@ -487,3 +487,4 @@ if __name__ == "__main__":
     # Schedule shifts for a specific week (e.g., week starting from '2024-01-29')
     week_start_date = datetime.strptime('2024-01-29', '%Y-%m-%d')  # Define the start date of the week
     final_schedule = schedule(employees_objects, role_availability, week_start_date)  # Generate the final schedule
+

@@ -86,3 +86,4 @@ def start_buy_stock(game_state):
     game_state.current_input_step = 1
     game_state.scrollable_text.add_text("Click an item to buy.")
     # ic(game_state.current_input_step)  # Debugging
+

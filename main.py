@@ -202,3 +202,4 @@ def game_loop():
 
 if startup_scene():  # If the startup scene returns True
     pygame.quit()  # Quit Pygame
+

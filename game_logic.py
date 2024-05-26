@@ -244,3 +244,4 @@ def adjust_popularity(popularity):
         int: The adjusted popularity.
     """
     return min(100, max(0, popularity + random.randint(-5, 5)))  # Adjust popularity within bounds
+

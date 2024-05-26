@@ -11,3 +11,4 @@ def handle_mouse_click(rect, event):
     if event.type == pygame.MOUSEBUTTONDOWN and rect.collidepoint(event.pos):
         return True
     return False
+

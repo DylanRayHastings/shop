@@ -13,3 +13,4 @@ def draw_rounded_rect(surface, rect, color, corner_radius, alpha):
     pygame.draw.rect(rect_surface, color, (0, corner_radius, rect.width, rect.height - 2 * corner_radius))
     
     surface.blit(rect_surface, rect.topleft)
+

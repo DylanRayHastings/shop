@@ -255,3 +255,4 @@ def simulate_activity(shop):
         output += format_clock_out(employee)  # Add clock-out message to output
 
     print(output)  # Print the output
+

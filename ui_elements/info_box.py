@@ -53,3 +53,4 @@ class InfoBox:
         self.text = new_text
         self.txt_surface = render_text(self.font, new_text, BLACK)
         # ic(new_text)  # Debugging
+

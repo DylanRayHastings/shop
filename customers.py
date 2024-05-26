@@ -188,3 +188,4 @@ def generate_customers():
             customer_service = random.randint(0, 20)  # Generate a random customer service score
             customers.append(Customer(name, mood, cleanliness, customer_service))  # Create a Customer object and add to the list
     return customers
+

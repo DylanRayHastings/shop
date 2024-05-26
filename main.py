@@ -14,6 +14,7 @@ from ui_elements.dropdown_menu import DropdownMenu
 from ui_elements.popup import Popup
 from utils import draw_rounded_rect
 from helpers import render_text, center_text_in_rect, handle_mouse_click
+from employees import EmployeeManager, Skill # Employee-related imports
 
 # Initialize Pygame
 pygame.init()  # Initialize all imported Pygame modules
@@ -56,6 +57,7 @@ class GameState:
         popup (Popup or None): The current popup message, if any.
         customer_manager (CustomerManager): The manager handling customer generation and simulation.
         day_started (bool): Flag to indicate if the day has started.
+        employee_manager (EmployeeManager): The manager handling employee generation, hiring, and training.
     """
     def __init__(self, items):
         """
@@ -76,6 +78,7 @@ class GameState:
         self.customer_manager = CustomerManager()  # Initialize CustomerManager instance
         self.customer_manager.customers = generate_customers()  # Generate and assign customers
         self.day_started = False  # Initialize day_started flag as False
+        self.employee_manager = EmployeeManager()  # Initialize EmployeeManager instance
         # ic(self.__dict__)  # Debugging
 
 game_state = GameState(items)  # Create an instance of GameState with the parsed items
@@ -202,4 +205,3 @@ def game_loop():
 
 if startup_scene():  # If the startup scene returns True
     pygame.quit()  # Quit Pygame
-

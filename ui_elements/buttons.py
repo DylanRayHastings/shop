@@ -11,7 +11,7 @@ class Button:
         self.color = BLUE
         self.action = action
         self.font = font
-        self.alpha = 128
+        self.alpha = 200
         # ic(self.__dict__)  # Debugging
 
     def draw(self, screen):

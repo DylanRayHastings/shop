@@ -15,19 +15,23 @@ from icecream import ic
 def initialize_ui_elements(screen_width, screen_height, font, game_state, exit_to_menu, start_day):
     left_x = 10
     left_y = 10
-    button_height = 50
+    box_width = 200
+    box_height = 40
     spacing = 10
 
-    dropdown_height = 40
-    game_state.dropdown_menu = DropdownMenu(left_x, left_y, 200, ["Start Day", "Buy Stock", "Begin Day", "Save Game", "Exit"], 
-                                             [start_day, lambda: start_buy_stock(game_state), lambda: game_state.scrollable_text.add_text(begin_day(game_state.shop)), lambda: game_state.shop.save_game(), exit_to_menu], font)
+    game_state.dropdown_menu = DropdownMenu(
+        left_x, left_y, box_width, 
+        ["Save Game", "Exit"], 
+        [lambda: game_state.shop.save_game(), exit_to_menu], 
+        font
+    )
 
-    game_state.money_display = InfoBox(left_x + 220, left_y, (screen_width - 230) // 3, dropdown_height, font, "Money: $1000.00")
-    game_state.time_display = InfoBox(left_x + 220 + (screen_width - 230) // 3, left_y, (screen_width - 230) // 3, dropdown_height, font, "Time: 10:00 AM")
-    game_state.popularity_display = InfoBox(left_x + 220 + 2 * (screen_width - 230) // 3, left_y, (screen_width - 230) // 3, dropdown_height, font, "Popularity: 50")
+    game_state.money_display = InfoBox(left_x + box_width + spacing, left_y, box_width, box_height, font, "$1000.00")
+    game_state.time_display = InfoBox(left_x + 2 * (box_width + spacing), left_y, box_width, box_height, font, "10:00 AM")
+    game_state.popularity_display = InfoBox(left_x + 3 * (box_width + spacing), left_y, box_width, box_height, font, "0 POP")
 
-    content_y = left_y + dropdown_height + spacing
-    content_height = screen_height - content_y - button_height - 20
+    content_y = left_y + box_height + spacing
+    content_height = screen_height - content_y - 50 - 20
     half_width = (screen_width - 40) // 2
 
     small_font = pygame.font.Font('Montserrat-Regular.ttf', 24)

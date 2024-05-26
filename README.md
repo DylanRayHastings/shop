@@ -38,7 +38,7 @@ The Shop Project is a simulation game where players manage a sub shop. The game 
 4. Activate the virtual environment:
     - On Windows:
         ```sh
-        venv\Scriptsctivate
+        venv\Scripts\activate
         ```
     - On macOS/Linux:
         ```sh

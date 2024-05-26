@@ -33,7 +33,7 @@ class DropdownMenu:
         self.font = font
         self.expanded = False
         self.option_height = 40
-        # ic(self.__dict__)  # Debugging
+        ic(self.__dict__)  # Debugging
 
     def handle_event(self, event):
         """
@@ -42,19 +42,20 @@ class DropdownMenu:
         Parameters:
             - event (pygame.event.Event): The event to handle.
         """
-        if handle_mouse_click(self.rect, event):
-            self.expanded = not self.expanded
-            # ic(self.expanded)  # Debugging
-        elif self.expanded:
-            for i, option in enumerate(self.options):
-                option_rect = pygame.Rect(self.rect.x, self.rect.y + (i + 1) * self.option_height, self.rect.width, self.option_height)
-                if option_rect.collidepoint(event.pos):
-                    self.actions[i]()
-                    self.expanded = False
-                    # ic(option, self.actions[i])  # Debugging
-                    return
-            self.expanded = False
-            # ic(self.expanded)  # Debugging
+        if event.type == pygame.MOUSEBUTTONDOWN:
+            if self.rect.collidepoint(event.pos):
+                self.expanded = not self.expanded
+                ic(self.expanded)  # Debugging
+            elif self.expanded:
+                for i, option in enumerate(self.options):
+                    option_rect = pygame.Rect(self.rect.x, self.rect.y + (i + 1) * self.option_height, self.rect.width, self.option_height)
+                    if option_rect.collidepoint(event.pos):
+                        self.actions[i]()
+                        self.expanded = False
+                        ic(option, self.actions[i])  # Debugging
+                        return
+                self.expanded = False
+                ic(self.expanded)  # Debugging
 
     def draw(self, screen):
         """
@@ -75,5 +76,4 @@ class DropdownMenu:
                 pygame.draw.rect(screen, BLACK, option_rect, 2)
                 option_text_surf = render_text(self.font, option, BLACK)
                 center_text_in_rect(screen, option_text_surf, option_rect)
-        # ic(screen)  # Debugging
-
+        ic(screen)  # Debugging

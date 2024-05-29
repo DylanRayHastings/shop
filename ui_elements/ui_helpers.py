@@ -1,4 +1,3 @@
-# ui_elements/ui_helpers.py
 import pygame
 
 from constants import RED, WHITE
@@ -21,7 +20,7 @@ def initialize_ui_elements(screen_width, screen_height, font, game_state, exit_t
 
     game_state.dropdown_menu = DropdownMenu(
         left_x, left_y, box_width, 
-        ["Save Game", "Exit"], 
+        ["Save", "Exit"], 
         [lambda: game_state.shop.save_game(), exit_to_menu], 
         font
     )
@@ -58,6 +57,15 @@ def handle_events(buttons, events, game_state):
         game_state.dropdown_menu.handle_event(event)
         if game_state.popup:
             game_state.popup.handle_event(event)
+        elif event.type == pygame.MOUSEBUTTONDOWN:
+            mouse_pos = event.pos
+            ic(mouse_pos)  # Debugging: Check mouse position on click
+            for rect, item_text in game_state.clickable_inventory_items:
+                if rect.collidepoint(mouse_pos):
+                    ic("Item clicked:", item_text)  # Debugging: Verify item click
+                    game_state.popup = Popup(item_text, game_state)
+                    ic("Popup created")  # Debugging: Verify popup creation
+                    break
     return running
     # ic(running)  # Debugging
 
@@ -69,6 +77,7 @@ def draw_ui_elements(screen, game_state):
     game_state.time_display.draw(screen)
     game_state.popularity_display.draw(screen)
     if game_state.popup:
+        ic("Drawing popup")  # Debugging: Confirm popup drawing
         game_state.popup.draw(screen)
     # ic(screen)  # Debugging
 
@@ -90,4 +99,3 @@ def start_buy_stock(game_state):
     game_state.current_input_step = 1
     game_state.scrollable_text.add_text("Click an item to buy.")
     # ic(game_state.current_input_step)  # Debugging
-

@@ -1,4 +1,5 @@
 import pygame
+from icecream import ic
 
 def render_text(font, text, color):
     return font.render(text, True, color)
@@ -9,6 +10,7 @@ def center_text_in_rect(surface, text_surf, rect):
 
 def handle_mouse_click(rect, event):
     if event.type == pygame.MOUSEBUTTONDOWN and rect.collidepoint(event.pos):
+        ic(handle_mouse_click)
         return True
     return False
 

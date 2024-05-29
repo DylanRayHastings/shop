@@ -10,6 +10,10 @@ BLACK = (0, 0, 0)
 BLUE = (0, 0, 255)
 RED = (255, 0, 0)
 GRAY = (200, 200, 200)
+BUTTON_COLOR = (70, 130, 180)  # Steel blue
+BUTTON_HOVER_COLOR = (100, 149, 237)  # Cornflower blue
+BUTTON_CLICK_COLOR = (65, 105, 225)  # Royal blue
+BUTTON_EXPANDED_COLOR = (90, 150, 200)  # Color to indicate expansion
 
 # Define subs dictionary
 SUBS = {

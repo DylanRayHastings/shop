@@ -1,0 +1,197 @@
+import random
+from datetime import datetime, timedelta
+from collections import defaultdict
+from icecream import ic
+from employee import Employee
+
+class Payroll:
+    def __init__(self):
+        self.employee_hours = {}
+        self.hourly_rates = {}
+
+    def set_hourly_rate(self, employee_id, rate):
+        self.hourly_rates[employee_id] = rate
+
+    def log_hours(self, employee_id, hours):
+        if employee_id not in self.employee_hours:
+            self.employee_hours[employee_id] = 0
+        self.employee_hours[employee_id] += hours
+
+    def calculate_pay(self, employee_id):
+        hours = self.employee_hours.get(employee_id, 0)
+        rate = self.hourly_rates.get(employee_id, 0)
+        return hours * rate
+
+    def generate_payroll_report(self, employees):
+        report = []
+        for employee_id, employee in employees.items():
+            pay = self.calculate_pay(employee_id)
+            report.append((employee_id, employee.name, pay))
+            ic(f"Payroll for {employee.name} (ID: {employee_id}): ${pay:.2f}")
+        return report
+
+def log_shift_hours(employee, start_time, end_time):
+    shift_duration = (end_time - start_time).seconds / 3600
+    return shift_duration
+
+role_availability = {
+    "Opener": {"start": 700, "end": 1400},
+    "Open Support": {"start": 900, "end": 1400},
+    "Rush Support": {"start": 1000, "end": 1400},
+    "Close Support": {"start": 1400, "end": 2000},
+    "Closer": {"start": 1600, "end": 2130},
+}
+
+required_roles = {
+    "Opener": 1, 
+    "Open Support": 1, 
+    "Rush Support": 2, 
+    "Close Support": 1, 
+    "Closer": 2, 
+    "Shift Lead": 1
+}
+
+employees_dict = {
+    "Dylan Hastings": "MIT",
+    "Morgan Buckner": "Crew",
+    "Jazmyne Chin": "SL",
+    "Damya Edmonson": "Crew",
+    "Anneyah Flowers": "Crew",
+    "Myles Jackson": "MIT",
+    "Grant Jimerson": "Crew",
+    "Nemaway Jones": "Crew",
+    "Morgan Langdon": "Crew",
+    "Naomi Lopez": "Crew",
+    "Carlos Marion": "Crew",
+    "Rubin Martinez": "Crew",
+    "Sean Matasick": "SL",
+    "Rolando Robles": "SL",
+    "Hannah Salazar": "SL",
+    "Austin Smith": "SL",
+    "Joshua Walker": "GM",
+    "Caleb Williams": "Crew",
+}
+
+employee_pay_rates = {
+    "Dylan Hastings": 10.0,
+    "Morgan Buckner": 9.5,
+    "Jazmyne Chin": 9.0,
+    "Damya Edmonson": 9.0,
+    "Anneyah Flowers": 9.0,
+    "Myles Jackson": 10.5,
+    "Grant Jimerson": 9.0,
+    "Nemaway Jones": 9.0,
+    "Morgan Langdon": 9.0,
+    "Naomi Lopez": 9.5,
+    "Carlos Marion": 10.0,
+    "Rubin Martinez": 9.0,
+    "Sean Matasick": 9.0,
+    "Rolando Robles": 9.0,
+    "Hannah Salazar": 9.0,
+    "Austin Smith": 9.0,
+    "Joshua Walker": 60000.0,  # GM Salary
+    "Caleb Williams": 10.0,
+}
+
+def generate_random_availability(role):
+    day = random.choice(["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"])
+    start_time = role_availability.get(role, {"start": 700})["start"]
+    end_time = role_availability.get(role, {"end": 2130})["end"]
+    return start_time, end_time, day
+
+def generate_random_employee_objects(employee_dict):
+    employees = {}
+    for name, role in employee_dict.items():
+        employee_id = generate_employee_id()
+        availability = [generate_random_availability(role) for _ in range(5)]
+        rating = round(random.uniform(3.0, 5.0), 1)
+        employees[employee_id] = Employee(name, employee_id, role, availability, rating)
+    return employees
+
+def generate_employee_id():
+    return f"EMP_{datetime.now().strftime('%Y%m%d%H%M%S')}_{random.randint(1000, 9999)}"
+
+def check_availability(employee, shift):
+    start_time, end_time, day = shift
+    role_start_time = role_availability.get(employee.role, {"start": 700})["start"]
+    role_end_time = role_availability.get(employee.role, {"end": 2130})["end"]
+    return role_start_time <= start_time <= role_end_time and role_start_time <= end_time <= role_end_time
+
+def schedule_employee(shift, required_role, final_schedule, role_availability):
+    employee_id, start_time, end_time = shift
+    if employee_id in role_availability.get(required_role, {}) and not is_overlapping(final_schedule.get(employee_id, []), start_time, end_time):
+        final_schedule.setdefault(employee_id, []).append((start_time, end_time))
+        return 1
+    return 0
+
+def is_overlapping(existing_schedule, start_time, end_time):
+    return any(not (end_time <= shift_start or start_time >= shift_end) for shift_start, shift_end in existing_schedule)
+
+def generate_final_schedule(sorted_shifts, required_roles, final_schedule, employees, role_availability, day):
+    role_count = 0
+    for required_role, required_employees in required_roles.items():
+        role_shifts = [shift for shift in sorted_shifts if shift[3] == required_role]
+        for shift in role_shifts:
+            if role_count == required_employees:
+                break
+            role_count += schedule_employee(shift, required_role, final_schedule, role_availability)
+    return role_count
+
+def generate_weekly_schedule(employees, role_availability, day):
+    return [(employee_id, shift[0], shift[1], employee.role)
+            for employee_id, employee in employees.items()
+            for shift in employee.shifts if shift[2] == day and check_availability(employee, shift)]
+
+def print_final_schedule(final_schedule, employees):
+    for day, shifts in final_schedule.items():
+        ic(f"\n{day}:")
+        if shifts:
+            for shift in shifts:
+                ic(f"  - Employee {shift[0]} ({employees[shift[0]].role}): {format_time(shift[1])} to {format_time(shift[2])}")
+        else:
+            ic(f"  - No shifts scheduled.")
+
+def schedule(employees, role_availability, week_start_date):
+    final_schedule = defaultdict(list)
+    days_of_week = ["Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"]
+    for day in days_of_week:
+        weekly_schedule = generate_weekly_schedule(employees, role_availability, day)
+        sorted_shifts = sorted(weekly_schedule, key=lambda x: (x[1], x[2]))
+        generate_final_schedule(sorted_shifts, required_roles, final_schedule, employees, role_availability, day)
+    print_final_schedule(final_schedule, employees)
+    return final_schedule
+
+def format_time(time):
+    return f"{time:04d}"[:2] + ":" + f"{time:04d}"[2:]
+
+def calculate_weighted_labor_cost_percentage(total_labor_cost, total_revenue, performance_rating):
+    if total_revenue == 0:
+        return 0
+    labor_cost_percentage = (total_labor_cost / total_revenue) * 100
+    return labor_cost_percentage * (performance_rating / 5.0)
+
+def calculate_and_print_weighted_labor_cost_percentage(total_labor_cost, total_revenue, performance_rating):
+    weighted_labor_cost_percentage = calculate_weighted_labor_cost_percentage(total_labor_cost, total_revenue, performance_rating)
+    ic(f"Weighted Labor Cost Percentage: {weighted_labor_cost_percentage:.2f}%")
+
+def calculate_total_payroll(payroll, employees, employee_pay_rates):
+    total_payroll = 0
+    gm_salary = 0
+    for employee_id, employee in employees.items():
+        if employee.role == "GM":
+            gm_salary += employee_pay_rates[employee.name]
+        else:
+            total_payroll += payroll.calculate_pay(employee_id)
+    ic(f"Total Payroll (excluding GM): ${total_payroll:.2f}")
+    ic(f"Total GM Salary: ${gm_salary:.2f}")
+    return total_payroll, gm_salary
+
+if __name__ == "__main__":
+    employees = generate_random_employee_objects(employees_dict)
+    for employee_id, employee in employees.items():
+        ic(f"Employee ID: {employee_id}", employee)
+    week_start_date = datetime.strptime('2024-01-29', '%Y-%m-%d')
+    final_schedule = schedule(employees, role_availability, week_start_date)
+
+    # Example of payroll integration
+    payroll = Payroll
